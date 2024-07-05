@@ -1,0 +1,93 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.zerock'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //  Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    //  Swagger UI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+    //  ModelMapper
+    implementation 'org.modelmapper:modelmapper:3.2.0'
+
+    //  스프링 시큐리티
+//    testImplementation 'org.springframework.security:spring-security-test'
+
+    //  JWT 문자열들을 얻기 위해 전송되는 mid,mpw 는 JSON 문자열로 전송되므로 HttpServletRequest 로 처리하려면 JSON 을 쉽게
+    //  처리할 수 있는 라이브러리인 GSON 라이브러리 추가
+//    implementation 'com.google.code.gson:gson:2.10.1'
+//
+//    //  JWT 라이브러리 추가
+//    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+//    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5', 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+    //  Querydsl 설정
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+
+    annotationProcessor(
+            "jakarta.persistence:jakarta.persistence-api",
+            "jakarta.annotation:jakarta.annotation-api",
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    )
+
+    //  Thumbnailator 라이브러리
+    implementation 'net.coobird:thumbnailator:0.4.20'
+
+    //  MySQL Driver
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java","$projectDir/build/generated"]
+        }
+    }
+}
+
+// compile 정리...
+compileJava.dependsOn('clean')
